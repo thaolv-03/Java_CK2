@@ -9,7 +9,7 @@ public class Chess {
         frame.setVisible(true);
         ChessPanel chessPanel = new ChessPanel();
         frame.add(chessPanel);
-        frame.setLocation(42, 100);
+        frame.setLocation(1000, 50);
         frame.pack();
     }
 }
