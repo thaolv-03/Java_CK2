@@ -8,13 +8,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChessPanel extends JPanel {
-    int border = 40;
+    int border = 50;
     final int Screen_Width = 500 + 2*border;
     final int Screen_Height = 500 + 2*border;
     final int cellSide = 500/8;
 
     final int chessW = cellSide;
-    final int chessH = cellSide*270/130;
+    final int chessH = cellSide*280/170;
     Map<Integer, BufferedImage> map = new HashMap<Integer, BufferedImage>();
     // r n b k q b n r
     // 2 3 4 6 5 4 3 2
@@ -28,7 +28,6 @@ public class ChessPanel extends JPanel {
         {11,11,11,11,11,11,11,11},
         {12,13,14,16,15,14,13,12},
     };
-
 
     public ChessPanel() {
         this.setPreferredSize(new Dimension(Screen_Width, Screen_Height));
@@ -62,7 +61,7 @@ public class ChessPanel extends JPanel {
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
                 if ((i % 2 == 0 && j % 2 != 0) || (i % 2 != 0 && j % 2 == 0)){
-                    g2.setColor(Color.lightGray);
+                    g2.setColor(Color.darkGray);
                     g2.fillRect(i*cellSide+border, j*cellSide+border, cellSide, cellSide);
                 }
             }
@@ -79,14 +78,13 @@ public class ChessPanel extends JPanel {
                 g2.drawImage(map.get(chessBoard[j][i]), border + i*cellSide,border + j*cellSide-(chessH-chessW),chessW,chessH,null);
             }
         }
-
     }
 
     public BufferedImage getImageByPath(String path){
         try {
             return ImageIO.read(getClass().getResourceAsStream(path));
         } catch (Exception e) {
-            System.out.println("Loi file anh");
+            System.out.println("File error!");
         }
         return null;
     }
