@@ -13,10 +13,9 @@ public class ChessPanel extends JPanel implements ActionListener {
     Timer timer = new Timer(1000/60,this);
 
     int border = 50;
-    final int Screen_Width = 800 + 2*border;
-    final int Screen_Height = 800 + 2*border;
-    final int cellSide = 800/8;
-    final int cellSide1 = 50;
+    final int Screen_Width = 700 + 2*border;
+    final int Screen_Height = 700 + 2*border;
+    final int cellSide = 700/8;
     int xCurrent = -1;
     int yCurrent = -1;
 
@@ -26,14 +25,14 @@ public class ChessPanel extends JPanel implements ActionListener {
     // r n b k q b n r
     // 2 3 4 6 5 4 3 2
     int[][] chessBoard = {
-        {02,00,00,05,06,04,03,02},
-        {01,01,01,01,01,01,01,01},
-        {03,00,04,00,00,11,00,00},
+        {02,00,00,05,00,04,03,02},
+        {01,01,01,01,06,01,01,01},
+        {03,00,04,00,01,11,00,00},
         {01,00,00,13,00,01,00,00},
-        {00,00,00,01,15,00,14,00},
-        {01,00,14,00,00,00,00,00},
-        {11,11,00,11,11,11,11,11},
-        {00,13,00,00,16,14,13,12},
+        {00,01,00,01,15,00,14,00},
+        {00,00,14,00,00,00,00,00},
+        {11,13,00,11,11,11,11,11},
+        {00,00,00,00,16,14,13,12},
     };
 
     public ChessPanel() {
@@ -152,29 +151,91 @@ public class ChessPanel extends JPanel implements ActionListener {
             // ---------- KNIGHT ----------
             case 13:
                 // nextStep
-                if (x-1>=0) {
+                // Along
+                // move to top bottom left
+                if (((x-1)>=0) && ((y-2)>=0) && ((y+2)<8)) {
                     if (chessBoard[y-2][x-1]==0) {
                         g.fillOval((x - 1) * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
                     }
+
+                    if (chessBoard[y+2][x-1]==0) {
+                        g.fillOval((x - 1) * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
+                    }
                 }
-                if (x+1<8) {
+                // move to top bottom right
+                if (((x+1)<8) && ((y-2)>=0) && ((y+2)<8)) {
                     if (chessBoard[y-2][x+1]==0) {
                         g.fillOval((x + 1) * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
                     }
+
+                    if (chessBoard[y+2][x+1]==0) {
+                        g.fillOval((x + 1) * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
+                    }
                 }
 
-                // thiếu trường hợp
+                // across
+                if (((x-2)>=0) && ((y-1)>=0) && ((y+1)<8)) {
+                    // move to top bottom left
+                    if (chessBoard[y-1][x-2]==0) {
+                        g.fillOval((x - 2) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
+                    }
+
+                    if (chessBoard[y+1][x-2]==0) {
+                        g.fillOval((x - 2) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
+                    }
+                }
+                // move to top bottom right
+                if (((x+2)<8) && ((y-1)>=0) && ((y+1)<8)) {
+                    if (chessBoard[y-1][x+2]==0) {
+                        g.fillOval((x + 2) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
+                    }
+
+                    if (chessBoard[y+1][x+2]==0) {
+                        g.fillOval((x + 2) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
+                    }
+                }
+
 
                 // nextKill
                 g.setColor(Color.red);
-                if (x-1>=0){
+                // kill top bottom left
+                if (((x-1)>=0) && ((y-2)>=0 && (y+2)<8)){
                     if (chessBoard[y-2][x-1] != 0 && chessBoard[y-2][x-1] < 7){
                         g.fillRect((x-1)*cellSide+border,(y-2)*cellSide+border,cellSide,cellSide);
                     }
+                    if (chessBoard[y+2][x-1] != 0 && chessBoard[y+2][x-1] < 7) {
+                        g.fillOval((x - 1) * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
+                    }
                 }
-                if(x+1<8){
+                // kill top bottom right
+                if(((x+1)<8) && ((y-2)>=0) && ((y+2)<8)){
                     if (chessBoard[y-2][x+1] != 0 && chessBoard[y-2][x+1] < 7){
                         g.fillRect((x+1)*cellSide+border,(y-2)*cellSide+border,cellSide,cellSide);
+                    }
+
+                    if (chessBoard[y+2][x+1] != 0 && chessBoard[y+2][x+1] < 7) {
+                        g.fillOval((x + 1) * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
+                    }
+                }
+                // kill to top bottom left
+                if (((x-2)>=0) && ((y-1)>=0) && ((y+1)<8)) {
+
+                    if (chessBoard[y-1][x-2] != 0 && chessBoard[y-1][x-2] < 7) {
+                        g.fillOval((x - 2) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
+                    }
+
+                    if (chessBoard[y+1][x-2] != 0 && chessBoard[y+1][x-2] < 7) {
+                        g.fillOval((x - 2) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
+                    }
+                }
+                // kill top bottom right
+                if (((x+2)<8) && ((y-1)>=0) && ((y+1)<8)) {
+                    if (chessBoard[y-1][x+2] != 0 && chessBoard[y-1][x+2] < 7) {
+                        g.fillOval((x + 2) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
+                    }
+
+                    if (chessBoard[y+1][x+2] != 0 && chessBoard[y+1][x+2] < 7) {
+                        g.fillOval((x + 2) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                     }
                 }
 
@@ -650,7 +711,7 @@ public class ChessPanel extends JPanel implements ActionListener {
             }
 
 
-            System.out.println((xCurrent+1) + " " + (yCurrent+1));
+            System.out.println((xCurrent) + " " + (yCurrent));
         }
 
         @Override
