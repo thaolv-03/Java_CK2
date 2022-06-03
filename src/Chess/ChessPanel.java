@@ -16,10 +16,10 @@ public class ChessPanel extends JPanel implements ActionListener {
     final int Screen_Width = 700 + 2 * border;
     final int Screen_Height = 700 + 2 * border;
     final int cellSide = 700 / 8;
-    int ovalMove = 40;
-    int MoveSide = (cellSide-ovalMove)/2;
-    int rectKill = 85;
-    int KillSide = (cellSide-rectKill)/2;
+//    int rectMove = 85;
+//    int MoveSide = (cellSide-rectMove)/2;
+//    int cellSide = 85;
+//    int KillSide = (cellSide-cellSide)/2;
     int xCurrent = -1;
     int yCurrent = -1;
 
@@ -32,7 +32,7 @@ public class ChessPanel extends JPanel implements ActionListener {
             { 02, 00, 00, 05, 00, 04, 03, 02 },
             { 01, 01, 01, 01, 06, 01, 01, 00 },
             { 03, 00, 04, 00, 01, 11, 00, 00 },
-            { 01, 16, 00, 13, 00, 01, 00, 00 },
+            { 01, 16, 00, 13, 00, 01, 00, 15 },
             { 01, 01, 00, 00, 15, 00, 16, 00 },
             { 00, 00, 14, 00, 00, 00, 00, 00 },
             { 00, 13, 00, 11, 11, 11, 11, 00 },
@@ -87,7 +87,7 @@ public class ChessPanel extends JPanel implements ActionListener {
         g2.setColor(new Color(0, 153, 255));
 
         if (xCurrent >= 0 && yCurrent >= 0) {
-            g2.fillRect(xCurrent * cellSide + border + KillSide, yCurrent * cellSide + border + KillSide, rectKill, rectKill);
+            g2.fillRect(xCurrent * cellSide + border, yCurrent * cellSide + border, cellSide, cellSide);
             nextStep(xCurrent, yCurrent, g2);
         }
         // set letters (A -> H) and numbers (1 -> 8)
@@ -111,29 +111,31 @@ public class ChessPanel extends JPanel implements ActionListener {
 
     //
     public void nextStep(int x, int y, Graphics2D g) {
-        g.setColor(Color.green);
+        g.setColor(new Color(0, 255, 0, 127));
         switch (chessBoard[y][x]) {
 
             // ---------------- PAWN ----------------
             case 11:
                 // NEXT_STEP
                 if (chessBoard[y - 1][x] == 0) { // if nextStep don't have any chess
-                    g.fillOval(x * cellSide + border + MoveSide, (y - 1) * cellSide + border + MoveSide, ovalMove, ovalMove);
-
+                    // g.fillRect(x * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
+                    g.fillRect(x * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                     if (y == 6 && chessBoard[y - 2][x] == 0) {
-                        g.fillOval(x * cellSide + border + MoveSide, (y - 2) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(x * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
                     }
                 }
                 // NEXT_KILL
-                g.setColor(Color.red);
+                g.setColor(new Color(230, 0, 0, 180));
+                // g.setColor(new Color(230, 0, 0, 180));
+
                 if (x - 1 >= 0) {
                     if (chessBoard[y - 1][x - 1] != 0 && chessBoard[y - 1][x - 1] < 7) {
-                        g.fillRect((x - 1) * cellSide + border + KillSide, (y - 1) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.fillRect((x - 1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                     }
                 }
                 if (x + 1 < 8) {
                     if (chessBoard[y - 1][x + 1] != 0 && chessBoard[y - 1][x + 1] < 7) {
-                        g.fillRect((x + 1) * cellSide + border + KillSide, (y - 1) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.fillRect((x + 1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                     }
                 }
 
@@ -141,21 +143,21 @@ public class ChessPanel extends JPanel implements ActionListener {
             case 1:
                 // NEXT_STEP
                 if (chessBoard[y + 1][x] == 0) {
-                    g.fillOval(x * cellSide + border + MoveSide, (y + 1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                    g.fillRect(x * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                     if (y == 1 && chessBoard[y + 2][x] == 0) {
-                        g.fillOval(x * cellSide + border + MoveSide, (y + 2) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(x * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
                     }
                 }
                 // NEXT_KILL
-                g.setColor(Color.red);
+                g.setColor(new Color(230, 0, 0, 180));
                 if (x - 1 >= 0) {
                     if (chessBoard[y + 1][x - 1] != 0 && chessBoard[y + 1][x - 1] > 7) {
-                        g.fillRect((x - 1) * cellSide + border + KillSide, (y + 1) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.fillRect((x - 1) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                     }
                 }
                 if (x + 1 < 8) {
                     if (chessBoard[y + 1][x + 1] != 0 && chessBoard[y + 1][x + 1] > 7) {
-                        g.fillRect((x + 1) * cellSide + border + KillSide, (y + 1) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.fillRect((x + 1) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                     }
                 }
                 break;
@@ -166,49 +168,49 @@ public class ChessPanel extends JPanel implements ActionListener {
                 // Move to left
                 for (int i = x - 1; i >= 0; i--) {
                     if (chessBoard[y][i] == 0) {
-                        g.fillOval(i * cellSide + border + MoveSide, y * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y][i] < 7) {
-                        g.setColor(Color.red);
-                        g.fillRect(i * cellSide + border + KillSide, y * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to right
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = x + 1; i < 8; i++) {
                     if (chessBoard[y][i] == 0) {
-                        g.fillOval(i * cellSide + border + MoveSide, y * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y][i] < 7) {
-                        g.setColor(Color.red);
-                        g.fillRect(i * cellSide + border + KillSide, y * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to top
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = y - 1; i >= 0; i--) {
                     if (chessBoard[i][x] == 0) {
-                        g.fillOval(x * cellSide + border + MoveSide, i * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[i][x] < 7) {
-                        g.setColor(Color.red);
-                        g.fillRect(x * cellSide + border + KillSide, i * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to bottom
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = y + 1; i < 8; i++) {
                     if (chessBoard[i][x] == 0) {
-                        g.fillOval(x * cellSide + border + MoveSide, i * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[i][x] < 7) {
-                        g.setColor(Color.red);
-                        g.fillRect(x * cellSide + border + KillSide, i * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
@@ -219,49 +221,49 @@ public class ChessPanel extends JPanel implements ActionListener {
                 // Move to left
                 for (int i = x - 1; i >= 0; i--) {
                     if (chessBoard[y][i] == 0) {
-                        g.fillOval(i * cellSide + border + MoveSide, y * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y][i] > 7) {
-                        g.setColor(Color.red);
-                        g.fillRect(i * cellSide + border + KillSide, y * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to right
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = x + 1; i < 8; i++) {
                     if (chessBoard[y][i] == 0) {
-                        g.fillOval(i * cellSide + border + MoveSide, y * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y][i] > 7) {
-                        g.setColor(Color.red);
-                        g.fillRect(i * cellSide + border + KillSide, y * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to top
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = y - 1; i >= 0; i--) {
                     if (chessBoard[i][x] == 0) {
-                        g.fillOval(x * cellSide + border + MoveSide, i * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[i][x] > 7) {
-                        g.setColor(Color.red);
-                        g.fillRect(x * cellSide + border + KillSide, i * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to bottom
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = y + 1; i < 8; i++) {
                     if (chessBoard[i][x] == 0) {
-                        g.fillOval(x * cellSide + border + MoveSide, i * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[i][x] > 7) {
-                        g.setColor(Color.red);
-                        g.fillRect(x * cellSide + border + KillSide, i * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
@@ -280,12 +282,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                 if ((x - 1) >= 0) {
                     if (y - 2 >= 0) {
                         if (chessBoard[y - 2][x - 1] == 0) {
-                            g.fillOval((x - 1) * cellSide + border + MoveSide, (y - 2) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x - 1) * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
                         }
                     }
                     if (y + 2 < 8) {
                         if (chessBoard[y + 2][x - 1] == 0) {
-                            g.fillOval((x - 1) * cellSide + border + MoveSide, (y + 2) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x - 1) * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
                         }
                     }
                 }
@@ -293,12 +295,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                 if ((x + 1) < 8) {
                     if (y - 2 >= 0)
                         if (chessBoard[y - 2][x + 1] == 0) {
-                            g.fillOval((x + 1) * cellSide + border + MoveSide, (y - 2) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x + 1) * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
                         }
 
                     if (y + 2 < 8)
                         if (chessBoard[y + 2][x + 1] == 0) {
-                            g.fillOval((x + 1) * cellSide + border + MoveSide, (y + 2) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x + 1) * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
                         }
                 }
 
@@ -307,48 +309,48 @@ public class ChessPanel extends JPanel implements ActionListener {
                 if ((x - 2) >= 0) {
                     if ((y - 1) >= 0)
                         if (chessBoard[y - 1][x - 2] == 0) {
-                            g.fillOval((x - 2) * cellSide + border + MoveSide, (y - 1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x - 2) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                         }
                     if ((y + 1) < 8)
                         if (chessBoard[y + 1][x - 2] == 0) {
-                            g.fillOval((x - 2) * cellSide + border + MoveSide, (y + 1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x - 2) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                         }
                 }
                 // Move to top & bottom ( right )
                 if ((x + 2) < 8) {
                     if ((y - 1) >= 0)
                         if (chessBoard[y - 1][x + 2] == 0) {
-                            g.fillOval((x + 2) * cellSide + border + MoveSide, (y - 1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x + 2) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                         }
                     if ((y + 1) < 8)
                         if (chessBoard[y + 1][x + 2] == 0) {
-                            g.fillOval((x + 2) * cellSide + border + MoveSide, (y + 1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x + 2) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                         }
                 }
 
                 // NEXT_KILL
                 // ALONG
-                g.setColor(Color.red);
+                g.setColor(new Color(230, 0, 0, 180));
                 // Kill top & bottom ( left )
                 if ((x - 1) >= 0) {
                     if (y - 2 >= 0)
                         if (chessBoard[y - 2][x - 1] != 0 && chessBoard[y - 2][x - 1] < 7) {
-                            g.fillRect((x - 1) * cellSide + border + KillSide, (y - 2) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.fillRect((x - 1) * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
                         }
                     if ((y + 2) < 8)
                         if (chessBoard[y + 2][x - 1] != 0 && chessBoard[y + 2][x - 1] < 7) {
-                            g.fillRect((x - 1) * cellSide + border + KillSide, (y + 2) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.fillRect((x - 1) * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
                         }
                 }
                 // Kill top & bottom ( right )
                 if ((x + 1) < 8) {
                     if ((y - 2) >= 0)
                         if (chessBoard[y - 2][x + 1] != 0 && chessBoard[y - 2][x + 1] < 7) {
-                            g.fillRect((x + 1) * cellSide + border + KillSide, (y - 2) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.fillRect((x + 1) * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
                         }
                     if ((y + 2) < 8)
                         if (chessBoard[y + 2][x + 1] != 0 && chessBoard[y + 2][x + 1] < 7) {
-                            g.fillRect((x + 1) * cellSide + border + KillSide, (y + 2) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.fillRect((x + 1) * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
                         }
                 }
 
@@ -357,22 +359,22 @@ public class ChessPanel extends JPanel implements ActionListener {
                 if ((x - 2) >= 0) {
                     if ((y - 1) >= 0)
                         if (chessBoard[y - 1][x - 2] != 0 && chessBoard[y - 1][x - 2] < 7) {
-                            g.fillRect((x - 2) * cellSide + border + KillSide, (y - 1) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.fillRect((x - 2) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                         }
                     if ((y + 1) < 8)
                         if (chessBoard[y + 1][x - 2] != 0 && chessBoard[y + 1][x - 2] < 7) {
-                            g.fillRect((x - 2) * cellSide + border + KillSide, (y + 1) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.fillRect((x - 2) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                         }
                 }
                 // Kill top & bottom ( right )
                 if ((x + 2) < 8) {
                     if((y - 1) >= 0)
                         if (chessBoard[y - 1][x + 2] != 0 && chessBoard[y - 1][x + 2] < 7) {
-                            g.fillRect((x + 2) * cellSide + border + KillSide, (y - 1) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.fillRect((x + 2) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                         }
                     if ((y + 1) < 8)
                         if (chessBoard[y + 1][x + 2] != 0 && chessBoard[y + 1][x + 2] < 7) {
-                            g.fillRect((x + 2) * cellSide + border + KillSide, (y + 1) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.fillRect((x + 2) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                         }
                 }
 
@@ -387,12 +389,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                 if ((x - 1) >= 0) {
                     if (y - 2 >= 0) {
                         if (chessBoard[y - 2][x - 1] == 0) {
-                            g.fillOval((x - 1) * cellSide + border + MoveSide, (y - 2) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x - 1) * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
                         }
                     }
                     if (y + 2 < 8) {
                         if (chessBoard[y + 2][x - 1] == 0) {
-                            g.fillOval((x - 1) * cellSide + border + MoveSide, (y + 2) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x - 1) * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
                         }
                     }
                 }
@@ -400,12 +402,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                 if ((x + 1) < 8) {
                     if (y - 2 >= 0)
                         if (chessBoard[y - 2][x + 1] == 0) {
-                            g.fillOval((x + 1) * cellSide + border + MoveSide, (y - 2) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x + 1) * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
                         }
 
                     if (y + 2 < 8)
                         if (chessBoard[y + 2][x + 1] == 0) {
-                            g.fillOval((x + 1) * cellSide + border + MoveSide, (y + 2) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x + 1) * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
                         }
                 }
 
@@ -414,48 +416,48 @@ public class ChessPanel extends JPanel implements ActionListener {
                 if ((x - 2) >= 0) {
                     if ((y - 1) >= 0)
                         if (chessBoard[y - 1][x - 2] == 0) {
-                            g.fillOval((x - 2) * cellSide + border + MoveSide, (y - 1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x - 2) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                         }
                     if ((y + 1) < 8)
                         if (chessBoard[y + 1][x - 2] == 0) {
-                            g.fillOval((x - 2) * cellSide + border + MoveSide, (y + 1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x - 2) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                         }
                 }
                 // Move to top & bottom ( right )
                 if ((x + 2) < 8) {
                     if ((y - 1) >= 0)
                         if (chessBoard[y - 1][x + 2] == 0) {
-                            g.fillOval((x + 2) * cellSide + border + MoveSide, (y - 1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x + 2) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                         }
                     if ((y + 1) < 8)
                         if (chessBoard[y + 1][x + 2] == 0) {
-                            g.fillOval((x + 2) * cellSide + border + MoveSide, (y + 1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x + 2) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                         }
                 }
 
                 // NEXT_KILL
                 // ALONG
-                g.setColor(Color.red);
+                g.setColor(new Color(230, 0, 0, 180));
                 // Kill top & bottom ( left )
                 if ((x - 1) >= 0) {
                     if (y - 2 >= 0)
                         if (chessBoard[y - 2][x - 1] != 0 && chessBoard[y - 2][x - 1] > 7) {
-                            g.fillRect((x - 1) * cellSide + border + KillSide, (y - 2) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.fillRect((x - 1) * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
                         }
                     if ((y + 2) < 8)
                         if (chessBoard[y + 2][x - 1] != 0 && chessBoard[y + 2][x - 1] > 7) {
-                            g.fillRect((x - 1) * cellSide + border + KillSide, (y + 2) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.fillRect((x - 1) * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
                         }
                 }
                 // Kill top & bottom ( right )
                 if ((x + 1) < 8) {
                     if ((y - 2) >= 0)
                         if (chessBoard[y - 2][x + 1] != 0 && chessBoard[y - 2][x + 1] > 7) {
-                            g.fillRect((x + 1) * cellSide + border + KillSide, (y - 2) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.fillRect((x + 1) * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
                         }
                     if ((y + 2) < 8)
                         if (chessBoard[y + 2][x + 1] != 0 && chessBoard[y + 2][x + 1] > 7) {
-                            g.fillRect((x + 1) * cellSide + border + KillSide, (y + 2) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.fillRect((x + 1) * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
                         }
                 }
 
@@ -464,22 +466,22 @@ public class ChessPanel extends JPanel implements ActionListener {
                 if ((x - 2) >= 0) {
                     if ((y - 1) >= 0)
                         if (chessBoard[y - 1][x - 2] != 0 && chessBoard[y - 1][x - 2] > 7) {
-                            g.fillRect((x - 2) * cellSide + border + KillSide, (y - 1) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.fillRect((x - 2) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                         }
                     if ((y + 1) < 8)
                         if (chessBoard[y + 1][x - 2] != 0 && chessBoard[y + 1][x - 2] > 7) {
-                            g.fillRect((x - 2) * cellSide + border + KillSide, (y + 1) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.fillRect((x - 2) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                         }
                 }
                 // Kill top & bottom ( right )
                 if ((x + 2) < 8) {
                     if((y - 1) >= 0)
                         if (chessBoard[y - 1][x + 2] != 0 && chessBoard[y - 1][x + 2] > 7) {
-                            g.fillRect((x + 2) * cellSide + border + KillSide, (y - 1) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.fillRect((x + 2) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                         }
                     if ((y + 1) < 8)
                         if (chessBoard[y + 1][x + 2] != 0 && chessBoard[y + 1][x + 2] > 7) {
-                            g.fillRect((x + 2) * cellSide + border + KillSide, (y + 1) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.fillRect((x + 2) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                         }
                 }
 
@@ -489,52 +491,52 @@ public class ChessPanel extends JPanel implements ActionListener {
             // ---------------- BISHOP ----------------
             case 14:
                 // Move to top left
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = 1; ((x - i) >= 0) && ((y - i) >= 0) && ((x - i) < 8) && ((y - i) < 8); i++) {
                     if (chessBoard[y - i][x - i] == 0) {
-                        g.fillOval((x - i) * cellSide + border + MoveSide, (y - i) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect((x - i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y - i][x - i] < 7) {
-                        g.setColor(Color.red);
-                        g.fillRect((x - i) * cellSide + border + KillSide, (y - i) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect((x - i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to top right
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = 1; ((x + i) >= 0) && ((y - i) >= 0) && ((x + i) < 8) && ((y - i) < 8); i++) {
                     if (chessBoard[y - i][x + i] == 0) {
-                        g.fillOval((x + i) * cellSide + border + MoveSide, (y - i) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect((x + i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y - i][x + i] < 7) {
-                        g.setColor(Color.red);
-                        g.fillRect((x + i) * cellSide + border + KillSide, (y - i) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect((x + i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to bottom right
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = 1; ((x + i) >= 0) && ((y + i) >= 0) && ((x + i) < 8) && ((y + i) < 8); i++) {
                     if (chessBoard[y + i][x + i] == 0) {
-                        g.fillOval((x + i) * cellSide + border + MoveSide, (y + i) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect((x + i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y + i][x + i] < 7) {
-                        g.setColor(Color.red);
-                        g.fillRect((x + i) * cellSide + border + KillSide, (y + i) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect((x + i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to bottom left
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = 1; ((x - i) >= 0) && ((y + i) >= 0) && ((x - i) < 8) && ((y + i) < 8); i++) {
                     if (chessBoard[y + i][x - i] == 0) {
-                        g.fillOval((x - i) * cellSide + border + MoveSide, (y + i) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect((x - i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y + i][x - i] < 7) {
-                        g.setColor(Color.red);
-                        g.fillRect((x - i) * cellSide + border + KillSide, (y + i) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect((x - i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
@@ -543,52 +545,52 @@ public class ChessPanel extends JPanel implements ActionListener {
 
             case 4:
                 // Move to top left
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = 1; ((x - i) >= 0) && ((y - i) >= 0) && ((x - i) < 8) && ((y - i) < 8); i++) {
                     if (chessBoard[y - i][x - i] == 0) {
-                        g.fillOval((x - i) * cellSide + border + MoveSide, (y - i) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect((x - i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y - i][x - i] > 7) {
-                        g.setColor(Color.red);
-                        g.fillRect((x - i) * cellSide + border + KillSide, (y - i) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect((x - i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to top right
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = 1; ((x + i) >= 0) && ((y - i) >= 0) && ((x + i) < 8) && ((y - i) < 8); i++) {
                     if (chessBoard[y - i][x + i] == 0) {
-                        g.fillOval((x + i) * cellSide + border + MoveSide, (y - i) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect((x + i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y - i][x + i] > 7) {
-                        g.setColor(Color.red);
-                        g.fillRect((x + i) * cellSide + border + KillSide, (y - i) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect((x + i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to bottom right
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = 1; ((x + i) >= 0) && ((y + i) >= 0) && ((x + i) < 8) && ((y + i) < 8); i++) {
                     if (chessBoard[y + i][x + i] == 0) {
-                        g.fillOval((x + i) * cellSide + border + MoveSide, (y + i) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect((x + i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y + i][x + i] > 7) {
-                        g.setColor(Color.red);
-                        g.fillRect((x + i) * cellSide + border + KillSide, (y + i) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect((x + i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to bottom left
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = 1; ((x - i) >= 0) && ((y + i) >= 0) && ((x - i) < 8) && ((y + i) < 8); i++) {
                     if (chessBoard[y + i][x - i] == 0) {
-                        g.fillOval((x - i) * cellSide + border + MoveSide, (y + i) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect((x - i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y + i][x - i] > 7) {
-                        g.setColor(Color.red);
-                        g.fillRect((x - i) * cellSide + border + KillSide, (y + i) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect((x - i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
@@ -601,101 +603,101 @@ public class ChessPanel extends JPanel implements ActionListener {
                 // Move to left
                 for (int i = x - 1; i >= 0; i--) {
                     if (chessBoard[y][i] == 0) {
-                        g.fillOval(i * cellSide + border + MoveSide, y * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y][i] < 7) {
-                        g.setColor(Color.red);
-                        g.fillRect(i * cellSide + border + KillSide, y * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to right
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = x + 1; i < 8; i++) {
                     if (chessBoard[y][i] == 0) {
-                        g.fillOval(i * cellSide + border + MoveSide, y * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y][i] < 7) {
-                        g.setColor(Color.red);
-                        g.fillRect(i * cellSide + border + KillSide, y * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to top
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = y - 1; i >= 0; i--) {
                     if (chessBoard[i][x] == 0) {
-                        g.fillOval(x * cellSide + border + MoveSide, i * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[i][x] < 7) {
-                        g.setColor(Color.red);
-                        g.fillRect(x * cellSide + border + KillSide, i * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to bottom
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = y + 1; i < 8; i++) {
                     if (chessBoard[i][x] == 0) {
-                        g.fillOval(x * cellSide + border + MoveSide, i * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[i][x] < 7) {
-                        g.setColor(Color.red);
-                        g.fillRect(x * cellSide + border + KillSide, i * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to top left
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = 1; ((x - i) >= 0) && ((y - i) >= 0) && ((x - i) < 8) && ((y - i) < 8); i++) {
                     if (chessBoard[y - i][x - i] == 0) {
-                        g.fillOval((x - i) * cellSide + border + MoveSide, (y - i) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect((x - i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y - i][x - i] < 7) {
-                        g.setColor(Color.red);
-                        g.fillRect((x - i) * cellSide + border + KillSide, (y - i) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect((x - i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to top right
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = 1; ((x + i) >= 0) && ((y - i) >= 0) && ((x + i) < 8) && ((y - i) < 8); i++) {
                     if (chessBoard[y - i][x + i] == 0) {
-                        g.fillOval((x + i) * cellSide + border + MoveSide, (y - i) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect((x + i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y - i][x + i] < 7) {
-                        g.setColor(Color.red);
-                        g.fillRect((x + i) * cellSide + border + KillSide, (y - i) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect((x + i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to bottom right
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = 1; ((x + i) >= 0) && ((y + i) >= 0) && ((x + i) < 8) && ((y + i) < 8); i++) {
                     if (chessBoard[y + i][x + i] == 0) {
-                        g.fillOval((x + i) * cellSide + border + MoveSide, (y + i) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect((x + i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y + i][x + i] < 7) {
-                        g.setColor(Color.red);
-                        g.fillRect((x + i) * cellSide + border + KillSide, (y + i) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect((x + i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to bottom left
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = 1; ((x - i) >= 0) && ((y + i) >= 0) && ((x - i) < 8) && ((y + i) < 8); i++) {
                     if (chessBoard[y + i][x - i] == 0) {
-                        g.fillOval((x - i) * cellSide + border + MoveSide, (y + i) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect((x - i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y + i][x - i] < 7) {
-                        g.setColor(Color.red);
-                        g.fillRect((x - i) * cellSide + border + KillSide, (y + i) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect((x - i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
@@ -708,101 +710,101 @@ public class ChessPanel extends JPanel implements ActionListener {
                 // Move to left
                 for (int i = x - 1; i >= 0; i--) {
                     if (chessBoard[y][i] == 0) {
-                        g.fillOval(i * cellSide + border + MoveSide, y * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y][i] > 7) {
-                        g.setColor(Color.red);
-                        g.fillRect(i * cellSide + border + KillSide, y * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to right
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = x + 1; i < 8; i++) {
                     if (chessBoard[y][i] == 0) {
-                        g.fillOval(i * cellSide + border + MoveSide, y * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y][i] > 7) {
-                        g.setColor(Color.red);
-                        g.fillRect(i * cellSide + border + KillSide, y * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to top
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = y - 1; i >= 0; i--) {
                     if (chessBoard[i][x] == 0) {
-                        g.fillOval(x * cellSide + border + MoveSide, i * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[i][x] > 7) {
-                        g.setColor(Color.red);
-                        g.fillRect(x * cellSide + border + KillSide, i * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to bottom
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = y + 1; i < 8; i++) {
                     if (chessBoard[i][x] == 0) {
-                        g.fillOval(x * cellSide + border + MoveSide, i * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[i][x] > 7) {
-                        g.setColor(Color.red);
-                        g.fillRect(x * cellSide + border + KillSide, i * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to top left
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = 1; ((x - i) >= 0) && ((y - i) >= 0) && ((x - i) < 8) && ((y - i) < 8); i++) {
                     if (chessBoard[y - i][x - i] == 0) {
-                        g.fillOval((x - i) * cellSide + border + MoveSide, (y - i) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect((x - i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y - i][x - i] > 7) {
-                        g.setColor(Color.red);
-                        g.fillRect((x - i) * cellSide + border + KillSide, (y - i) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect((x - i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to top right
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = 1; ((x + i) >= 0) && ((y - i) >= 0) && ((x + i) < 8) && ((y - i) < 8); i++) {
                     if (chessBoard[y - i][x + i] == 0) {
-                        g.fillOval((x + i) * cellSide + border + MoveSide, (y - i) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect((x + i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y - i][x + i] > 7) {
-                        g.setColor(Color.red);
-                        g.fillRect((x + i) * cellSide + border + KillSide, (y - i) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect((x + i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to bottom right
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = 1; ((x + i) >= 0) && ((y + i) >= 0) && ((x + i) < 8) && ((y + i) < 8); i++) {
                     if (chessBoard[y + i][x + i] == 0) {
-                        g.fillOval((x + i) * cellSide + border + MoveSide, (y + i) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect((x + i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y + i][x + i] > 7) {
-                        g.setColor(Color.red);
-                        g.fillRect((x + i) * cellSide + border + KillSide, (y + i) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect((x + i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
                 }
 
                 // Move to bottom left
-                g.setColor(Color.green);
+                g.setColor(new Color(0, 255, 0, 127));
                 for (int i = 1; ((x - i) >= 0) && ((y + i) >= 0) && ((x - i) < 8) && ((y + i) < 8); i++) {
                     if (chessBoard[y + i][x - i] == 0) {
-                        g.fillOval((x - i) * cellSide + border + MoveSide, (y + i) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect((x - i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
                     } else if (chessBoard[y + i][x - i] > 7) {
-                        g.setColor(Color.red);
-                        g.fillRect((x - i) * cellSide + border + KillSide, (y + i) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect((x - i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
                         break;
                     } else
                         break;
@@ -814,22 +816,22 @@ public class ChessPanel extends JPanel implements ActionListener {
                 // NEXT_STEP
                 if (y-1>=0) {
                     if (chessBoard[y-1][x] == 0 ) {
-                        g.fillOval(x * cellSide + border + MoveSide, (y - 1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(x * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                     }
                 }
                 if (y+1<8) {
                     if (chessBoard[y+1][x] == 0 ) {
-                        g.fillOval(x * cellSide + border + MoveSide, (y + 1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(x * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                     }
                 }
                 if (x-1>=0) {
                     if (chessBoard[y][x-1] == 0 ) {
-                        g.fillOval((x-1) * cellSide + border + MoveSide, y * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect((x-1) * cellSide + border, y * cellSide + border, cellSide, cellSide);
                     }
                 }
                 if (x+1<8) {
                     if (chessBoard[y][x+1] == 0 ) {
-                        g.fillOval((x+1) * cellSide + border + MoveSide, y * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect((x+1) * cellSide + border, y * cellSide + border, cellSide, cellSide);
                     }
                 }
 
@@ -837,12 +839,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                 if (x-1>=0){
                     if (y-1>=0) {
                         if (chessBoard[y-1][x-1] == 0) {
-                            g.fillOval((x-1) * cellSide + border + MoveSide, (y-1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x-1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                         }
                     }
                     if (y+1<8) {
                         if (chessBoard[y+1][x-1] == 0) {
-                            g.fillOval((x-1) * cellSide + border + MoveSide, (y+1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x-1) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                         }
                     }
                 }
@@ -850,12 +852,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                 if (x+1<8){
                     if (y-1>=0) {
                         if (chessBoard[y-1][x+1] == 0) {
-                            g.fillOval((x+1) * cellSide + border + MoveSide, (y-1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x+1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                         }
                     }
                     if (y+1<8) {
                         if (chessBoard[y+1][x+1] == 0) {
-                            g.fillOval((x+1) * cellSide + border + MoveSide, (y+1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x+1) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                         }
                     }
                 }
@@ -864,40 +866,40 @@ public class ChessPanel extends JPanel implements ActionListener {
 
                 if (y-1>=0) {
                     if (chessBoard[y-1][x] != 0 && chessBoard[y-1][x] < 7) {
-                        g.setColor(Color.red);
-                        g.fillRect(x * cellSide + border + KillSide, (y - 1) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect(x * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                     }
                 }
                 if (y+1<8) {
                     if (chessBoard[y+1][x] != 0 && chessBoard[y+1][x] < 7 ) {
-                        g.setColor(Color.red);
-                        g.fillRect(x * cellSide + border + KillSide, (y + 1) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect(x * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                     }
                 }
                 if (x-1>=0) {
                     if (chessBoard[y][x-1] != 0 && chessBoard[y][x-1] < 7 ) {
-                        g.setColor(Color.red);
-                        g.fillRect((x - 1) * cellSide + border + KillSide, y * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect((x - 1) * cellSide + border, y * cellSide + border, cellSide, cellSide);
                     }
                 }
                 if (x+1<8) {
                     if (chessBoard[y][x+1] != 0 && chessBoard[y][x+1] < 7 ) {
-                        g.setColor(Color.red);
-                        g.fillRect((x + 1) * cellSide + border + KillSide, y * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect((x + 1) * cellSide + border, y * cellSide + border, cellSide, cellSide);
                     }
                 }
 
                 if (x-1>=0){
                     if (y-1>=0) {
                         if (chessBoard[y-1][x-1] != 0 && chessBoard[y-1][x-1] < 7) {
-                            g.setColor(Color.red);
-                            g.fillRect((x - 1) * cellSide + border + KillSide, (y - 1) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.setColor(new Color(230, 0, 0, 180));
+                            g.fillRect((x - 1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                         }
                     }
                     if (y+1<8) {
                         if (chessBoard[y+1][x-1] != 0 && chessBoard[y+1][x-1] < 7) {
-                            g.setColor(Color.red);
-                            g.fillRect((x - 1) * cellSide + border + KillSide, (y + 1) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.setColor(new Color(230, 0, 0, 180));
+                            g.fillRect((x - 1) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                         }
                     }
                 }
@@ -905,14 +907,14 @@ public class ChessPanel extends JPanel implements ActionListener {
                 if (x+1<8){
                     if (y-1>=0) {
                         if (chessBoard[y-1][x+1] != 0 && chessBoard[y-1][x+1] < 7) {
-                            g.setColor(Color.red);
-                            g.fillRect((x + 1) * cellSide + border + KillSide, (y - 1) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.setColor(new Color(230, 0, 0, 180));
+                            g.fillRect((x + 1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                         }
                     }
                     if (y+1<8) {
                         if (chessBoard[y+1][x+1] != 0 && chessBoard[y+1][x+1] < 7) {
-                            g.setColor(Color.red);
-                            g.fillRect((x + 1) * cellSide + border + KillSide, (y + 1) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.setColor(new Color(230, 0, 0, 180));
+                            g.fillRect((x + 1) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                         }
                     }
                 }
@@ -923,46 +925,48 @@ public class ChessPanel extends JPanel implements ActionListener {
                 // NEXT_STEP
                 if (y-1>=0) {
                     if (chessBoard[y-1][x] == 0 ) {
-                        g.fillOval(x * cellSide + border + MoveSide, (y - 1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(x * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                     }
                 }
                 if (y+1<8) {
                     if (chessBoard[y+1][x] == 0 ) {
-                        g.fillOval(x * cellSide + border + MoveSide, (y + 1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect(x * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                     }
                 }
                 if (x-1>=0) {
                     if (chessBoard[y][x-1] == 0 ) {
-                        g.fillOval((x-1) * cellSide + border + MoveSide, y * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect((x-1) * cellSide + border, y * cellSide + border, cellSide, cellSide);
                     }
                 }
                 if (x+1<8) {
                     if (chessBoard[y][x+1] == 0 ) {
-                        g.fillOval((x+1) * cellSide + border + MoveSide, y * cellSide + border + MoveSide, ovalMove, ovalMove);
+                        g.fillRect((x+1) * cellSide + border, y * cellSide + border, cellSide, cellSide);
                     }
                 }
+
 
                 if (x-1>=0){
                     if (y-1>=0) {
                         if (chessBoard[y-1][x-1] == 0) {
-                            g.fillOval((x-1) * cellSide + border + MoveSide, (y-1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x-1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                         }
                     }
                     if (y+1<8) {
                         if (chessBoard[y+1][x-1] == 0) {
-                            g.fillOval((x-1) * cellSide + border + MoveSide, (y+1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x-1) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                         }
                     }
                 }
+
                 if (x+1<8){
                     if (y-1>=0) {
                         if (chessBoard[y-1][x+1] == 0) {
-                            g.fillOval((x+1) * cellSide + border + MoveSide, (y-1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x+1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                         }
                     }
                     if (y+1<8) {
                         if (chessBoard[y+1][x+1] == 0) {
-                            g.fillOval((x+1) * cellSide + border + MoveSide, (y+1) * cellSide + border + MoveSide, ovalMove, ovalMove);
+                            g.fillRect((x+1) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                         }
                     }
                 }
@@ -970,40 +974,40 @@ public class ChessPanel extends JPanel implements ActionListener {
                 // NEXT_KILL
                 if (y-1>=0) {
                     if (chessBoard[y-1][x] != 0 && chessBoard[y-1][x] > 7) {
-                        g.setColor(Color.red);
-                        g.fillRect(x * cellSide + border + KillSide, (y - 1) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect(x * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                     }
                 }
                 if (y+1<8) {
                     if (chessBoard[y+1][x] != 0 && chessBoard[y+1][x] > 7 ) {
-                        g.setColor(Color.red);
-                        g.fillRect(x * cellSide + border + KillSide, (y + 1) * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect(x * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                     }
                 }
                 if (x-1>=0) {
                     if (chessBoard[y][x-1] != 0 && chessBoard[y][x-1] > 7 ) {
-                        g.setColor(Color.red);
-                        g.fillRect((x - 1) * cellSide + border + KillSide, y * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect((x - 1) * cellSide + border, y * cellSide + border, cellSide, cellSide);
                     }
                 }
                 if (x+1<8) {
                     if (chessBoard[y][x+1] != 0 && chessBoard[y][x+1] > 7 ) {
-                        g.setColor(Color.red);
-                        g.fillRect((x + 1) * cellSide + border + KillSide, y * cellSide + border + KillSide, rectKill, rectKill);
+                        g.setColor(new Color(230, 0, 0, 180));
+                        g.fillRect((x + 1) * cellSide + border, y * cellSide + border, cellSide, cellSide);
                     }
                 }
 
                 if (x-1>=0){
                     if (y-1>=0) {
                         if (chessBoard[y-1][x-1] != 0 && chessBoard[y-1][x-1] > 7) {
-                            g.setColor(Color.red);
-                            g.fillRect((x - 1) * cellSide + border + KillSide, (y - 1) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.setColor(new Color(230, 0, 0, 180));
+                            g.fillRect((x - 1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                         }
                     }
                     if (y+1<8) {
                         if (chessBoard[y+1][x-1] != 0 && chessBoard[y+1][x-1] > 7) {
-                            g.setColor(Color.red);
-                            g.fillRect((x - 1) * cellSide + border + KillSide, (y + 1) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.setColor(new Color(230, 0, 0, 180));
+                            g.fillRect((x - 1) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                         }
                     }
                 }
@@ -1011,14 +1015,14 @@ public class ChessPanel extends JPanel implements ActionListener {
                 if (x+1<8){
                     if (y-1>=0) {
                         if (chessBoard[y-1][x+1] != 0 && chessBoard[y-1][x+1] > 7) {
-                            g.setColor(Color.red);
-                            g.fillRect((x + 1) * cellSide + border + KillSide, (y - 1) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.setColor(new Color(230, 0, 0, 180));
+                            g.fillRect((x + 1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                         }
                     }
                     if (y+1<8) {
                         if (chessBoard[y+1][x+1] != 0 && chessBoard[y+1][x+1] > 7) {
-                            g.setColor(Color.red);
-                            g.fillRect((x + 1) * cellSide + border + KillSide, (y + 1) * cellSide + border + KillSide, rectKill, rectKill);
+                            g.setColor(new Color(230, 0, 0, 180));
+                            g.fillRect((x + 1) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
                         }
                     }
                 }
