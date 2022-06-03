@@ -16,9 +16,9 @@ public class ChessPanel extends JPanel implements ActionListener {
     final int Screen_Width = 700 + 2 * border;
     final int Screen_Height = 700 + 2 * border;
     final int cellSide = 700 / 8;
-    int ovalMove = 45;
+    int ovalMove = 40;
     int MoveSide = (cellSide-ovalMove)/2;
-    int rectKill = 75;
+    int rectKill = 85;
     int KillSide = (cellSide-rectKill)/2;
     int xCurrent = -1;
     int yCurrent = -1;
@@ -41,9 +41,8 @@ public class ChessPanel extends JPanel implements ActionListener {
     // Get average runtime of successful runs in seconds
     public ChessPanel() {
         this.setPreferredSize(new Dimension(Screen_Width, Screen_Height));
-//        this.setBackground(Color.lightGray);
-//        this.setBackground(new Color(255, 204, 0));
-        this.setBackground(new Color(0, 153, 255));
+        this.setBackground(Color.lightGray);
+//        this.setBackground(new Color(0, 153, 255));
         this.addMouseListener(new CustomMouseListener());
         this.timer.start();
 
@@ -84,9 +83,11 @@ public class ChessPanel extends JPanel implements ActionListener {
         }
         // set color current Cell
 //        g2.setColor(Color.cyan);
-        g2.setColor(new Color(255, 204, 0));
+//        g2.setColor(new Color(255, 204, 0));
+        g2.setColor(new Color(0, 153, 255));
+
         if (xCurrent >= 0 && yCurrent >= 0) {
-            g2.fillRect(xCurrent * cellSide + border, yCurrent * cellSide + border, cellSide, cellSide);
+            g2.fillRect(xCurrent * cellSide + border + KillSide, yCurrent * cellSide + border + KillSide, rectKill, rectKill);
             nextStep(xCurrent, yCurrent, g2);
         }
         // set letters (A -> H) and numbers (1 -> 8)
@@ -1049,13 +1050,14 @@ public class ChessPanel extends JPanel implements ActionListener {
             if (xCurrent == (e.getX() - border) / cellSide && yCurrent == (e.getY() - border) / cellSide) {
                 xCurrent = -1;
                 yCurrent = -1;
+                System.out.println("Current cell -> none");
             } else if (e.getX() >= border && e.getX() < border + cellSide * 8 && e.getY() >= border
                     && e.getY() < border + cellSide * 8) {
                 xCurrent = (e.getX() - border) / cellSide;
                 yCurrent = (e.getY() - border) / cellSide;
+                System.out.println("Current cell -> "+((char)(xCurrent+65)) + "" + (yCurrent+1));
             }
 
-            System.out.println((xCurrent) + " " + (yCurrent));
         }
 
         @Override
