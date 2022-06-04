@@ -1054,12 +1054,12 @@ public class ChessPanel extends JPanel implements ActionListener {
             if (xCurrent == (e.getX() - border) / cellSide && yCurrent == (e.getY() - border) / cellSide) {
                 xCurrent = -1;
                 yCurrent = -1;
-                System.out.println("Current cell -> none");
+                System.out.println("-> none");
             } else if (e.getX() >= border && e.getX() < border + cellSide * 8 && e.getY() >= border
                     && e.getY() < border + cellSide * 8) {
                 xCurrent = (e.getX() - border) / cellSide;
                 yCurrent = (e.getY() - border) / cellSide;
-                System.out.println("Current cell -> "+((char)(xCurrent+65)) + "" + (yCurrent+1));
+                System.out.println("-> "+((char)(xCurrent+65)) + "" + (yCurrent+1));
             }
 
         }
