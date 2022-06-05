@@ -16,10 +16,6 @@ public class ChessPanel extends JPanel implements ActionListener {
     final int Screen_Width = 700 + 2 * border;
     final int Screen_Height = 700 + 2 * border;
     final int cellSide = 700 / 8;
-//    int rectMove = 85;
-//    int MoveSide = (cellSide-rectMove)/2;
-//    int cellSide = 85;
-//    int KillSide = (cellSide-cellSide)/2;
     int xCurrent = -1;
     int yCurrent = -1;
 
@@ -38,22 +34,32 @@ public class ChessPanel extends JPanel implements ActionListener {
             { 00, 13, 00, 11, 11, 11, 11, 00 },
             { 12, 00, 00, 00, 16, 14, 13, 12 },
     };
-    // Get average runtime of successful runs in seconds
+
+    boolean[][] chessBoardCheck = {
+            { false, false, false, false, false, false, false, false },
+            { false, false, false, false, false, false, false, false },
+            { false, false, false, false, false, false, false, false },
+            { false, false, false, false, false, false, false, false },
+            { false, false, false, false, false, false, false, false },
+            { false, false, false, false, false, false, false, false },
+            { false, false, false, false, false, false, false, false },
+            { false, false, false, false, false, false, false, false },
+    };
+
     public ChessPanel() {
         this.setPreferredSize(new Dimension(Screen_Width, Screen_Height));
         this.setBackground(Color.lightGray);
-//        this.setBackground(new Color(0, 153, 255));
         this.addMouseListener(new CustomMouseListener());
         this.timer.start();
 
-        // BLACK
+        // BLACK chess piece
         map.put(1, getImageByPath("img-chess/pawn-black.png"));
         map.put(2, getImageByPath("img-chess/rook-black.png"));
         map.put(3, getImageByPath("img-chess/knight-black.png"));
         map.put(4, getImageByPath("img-chess/bishop-black.png"));
         map.put(5, getImageByPath("img-chess/queen-black.png"));
         map.put(6, getImageByPath("img-chess/king-black.png"));
-        // WHITE
+        // WHITE chess piece
         map.put(11, getImageByPath("img-chess/pawn-white.png"));
         map.put(12, getImageByPath("img-chess/rook-white.png"));
         map.put(13, getImageByPath("img-chess/knight-white.png"));
@@ -61,6 +67,7 @@ public class ChessPanel extends JPanel implements ActionListener {
         map.put(15, getImageByPath("img-chess/queen-white.png"));
         map.put(16, getImageByPath("img-chess/king-white.png"));
     }
+
 
     @Override
     protected void paintChildren(Graphics g) {
@@ -82,13 +89,15 @@ public class ChessPanel extends JPanel implements ActionListener {
             }
         }
         // set color current Cell
-//        g2.setColor(Color.cyan);
-//        g2.setColor(new Color(255, 204, 0));
         g2.setColor(new Color(0, 153, 255));
 
         if (xCurrent >= 0 && yCurrent >= 0) {
-            g2.fillRect(xCurrent * cellSide + border, yCurrent * cellSide + border, cellSide, cellSide);
+            if (chessBoard[yCurrent][xCurrent] != 0) {
+                g2.fillRect(xCurrent * cellSide + border, yCurrent * cellSide + border, cellSide, cellSide);
+            }
+
             nextStep(xCurrent, yCurrent, g2);
+
         }
         // set letters (A -> H) and numbers (1 -> 8)
         g2.setFont(new Font("Segoe UI", Font.BOLD, 20));
@@ -109,7 +118,15 @@ public class ChessPanel extends JPanel implements ActionListener {
         }
     }
 
-    //
+    // Move chess pieces
+    public void moveChessPieces(int x, int y) {
+        chessBoard[y][x] = chessBoard[yCurrent][xCurrent];
+        chessBoard[yCurrent][xCurrent] = 0;
+        xCurrent = -1;
+        yCurrent = -1;
+    }
+
+    // Next step of chess pieces
     public void nextStep(int x, int y, Graphics2D g) {
         g.setColor(new Color(0, 255, 0, 127));
         switch (chessBoard[y][x]) {
@@ -118,7 +135,6 @@ public class ChessPanel extends JPanel implements ActionListener {
             case 11:
                 // NEXT_STEP
                 if (chessBoard[y - 1][x] == 0) { // if nextStep don't have any chess
-                    // g.fillRect(x * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                     g.fillRect(x * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
                     if (y == 6 && chessBoard[y - 2][x] == 0) {
                         g.fillRect(x * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
@@ -126,8 +142,6 @@ public class ChessPanel extends JPanel implements ActionListener {
                 }
                 // NEXT_KILL
                 g.setColor(new Color(230, 0, 0, 180));
-                // g.setColor(new Color(230, 0, 0, 180));
-
                 if (x - 1 >= 0) {
                     if (chessBoard[y - 1][x - 1] != 0 && chessBoard[y - 1][x - 1] < 7) {
                         g.fillRect((x - 1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
@@ -140,6 +154,7 @@ public class ChessPanel extends JPanel implements ActionListener {
                 }
 
                 break;
+
             case 1:
                 // NEXT_STEP
                 if (chessBoard[y + 1][x] == 0) {
@@ -1055,6 +1070,9 @@ public class ChessPanel extends JPanel implements ActionListener {
                 xCurrent = -1;
                 yCurrent = -1;
                 System.out.println("-> none");
+            }
+            else if (xCurrent != -1 && yCurrent != -1 && chessBoard[yCurrent][xCurrent] != 0) {
+                moveChessPieces((e.getX() - border) / cellSide,(e.getY() - border) / cellSide);
             } else if (e.getX() >= border && e.getX() < border + cellSide * 8 && e.getY() >= border
                     && e.getY() < border + cellSide * 8) {
                 xCurrent = (e.getX() - border) / cellSide;
@@ -1063,6 +1081,7 @@ public class ChessPanel extends JPanel implements ActionListener {
             }
 
         }
+
 
         @Override
         public void mousePressed(MouseEvent e) {
