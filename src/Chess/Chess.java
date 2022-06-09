@@ -9,8 +9,8 @@ public class Chess{
         frame.setVisible(true);
         ChessPanel chessPanel = new ChessPanel();
         frame.add(chessPanel);
-        frame.setLocation(1000, 60);
+        frame.setLocation(1000, 80);
         frame.pack();
-
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 }

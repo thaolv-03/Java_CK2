@@ -5,7 +5,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
-import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,21 +20,20 @@ public class ChessPanel extends JPanel implements ActionListener {
     final int cellSide = 700 / 8;
     int xCurrent = -1;
     int yCurrent = -1;
-
     final int chessW = cellSide;
     final int chessH = cellSide * 360 / 250;
+
     Map<Integer, BufferedImage> map = new HashMap<Integer, BufferedImage>();
-    // r n b k q b n r
-    // 2 3 4 6 5 4 3 2
+
     int[][] chessBoard = {
-            { 02, 00, 00, 00, 00, 00, 03, 02 },
-            { 01, 01, 01, 01, 06, 01, 01, 00 },
-            { 03, 00, 04, 00, 01, 11, 00, 00 },
-            { 01, 16, 00, 13, 00, 01, 00, 15 },
-            { 01, 01, 00, 00, 15, 00, 16, 00 },
-            { 00, 00, 14, 00, 00, 00, 00, 00 },
-            { 00, 13, 00, 11, 11, 11, 11, 00 },
-            { 12, 00, 00, 00, 16, 14, 13, 12 },
+            { 02, 00, 00, 05, 06, 04, 03, 02 },    // { 02, 03, 04, 05, 06, 04, 03, 02 },
+            { 01, 04, 01, 00, 01, 00, 00, 01 },    // { 01, 01, 01, 01, 01, 01, 01, 01 },
+            { 00, 00, 00, 01, 00, 00, 00, 00 },    // { 00, 00, 00, 00, 00, 00, 00, 00 },
+            { 00, 11, 00, 15, 03, 01, 01, 00 },    // { 00, 00, 00, 00, 00, 00, 00, 00 },
+            { 00, 00, 11, 00, 11, 11, 11, 00 },    // { 00, 00, 00, 00, 00, 00, 00, 00 },
+            { 00, 00, 00, 11, 00, 13, 00, 00 },    // { 00, 00, 00, 00, 00, 00, 00, 00 },
+            { 00, 11, 00, 00, 00, 00, 00, 11 },    // { 11, 11, 11, 11, 11, 11, 11, 11 },
+            { 12, 13, 14, 00, 16, 14, 00, 12 },    // { 12, 14, 14, 15, 16, 14, 14, 12 },
     };
 
     public ChessPanel() {
@@ -51,6 +49,7 @@ public class ChessPanel extends JPanel implements ActionListener {
         map.put(4, getImageByPath("img-chess/bishop-black.png"));
         map.put(5, getImageByPath("img-chess/queen-black.png"));
         map.put(6, getImageByPath("img-chess/king-black.png"));
+
         // WHITE chess piece
         map.put(11, getImageByPath("img-chess/pawn-white.png"));
         map.put(12, getImageByPath("img-chess/rook-white.png"));
@@ -67,6 +66,7 @@ public class ChessPanel extends JPanel implements ActionListener {
         Graphics2D g2 = (Graphics2D) g;
 
         this.grp2 = g2;
+
 
         // set color cellWhite
         g2.setColor(Color.WHITE);
@@ -92,6 +92,7 @@ public class ChessPanel extends JPanel implements ActionListener {
             nextStep(xCurrent, yCurrent, g2);
 
         }
+
         // set letters (A -> H) and numbers (1 -> 8)
         g2.setFont(new Font("Segoe UI", Font.BOLD, 20));
         g2.setColor(Color.black);
@@ -121,7 +122,8 @@ public class ChessPanel extends JPanel implements ActionListener {
 
     // Next step of chess pieces
     public boolean[][] nextStep(int x, int y, Graphics2D g) {
-        boolean[][] result = {
+        // array check
+        boolean[][] check = {
                 { false, false, false, false, false, false, false, false },
                 { false, false, false, false, false, false, false, false },
                 { false, false, false, false, false, false, false, false },
@@ -140,10 +142,10 @@ public class ChessPanel extends JPanel implements ActionListener {
                 // NEXT_STEP
                 if (chessBoard[y - 1][x] == 0) { // if nextStep don't have any chess
                     g.fillRect(x * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                    result[x][y - 1] = true;
+                    check[x][y - 1] = true;
                     if (y == 6 && chessBoard[y - 2][x] == 0) {
                         g.fillRect(x * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
-                        result[x][y - 2] = true;
+                        check[x][y - 2] = true;
                     }
                 }
                 // NEXT_KILL
@@ -151,26 +153,25 @@ public class ChessPanel extends JPanel implements ActionListener {
                 if (x - 1 >= 0) {
                     if (chessBoard[y - 1][x - 1] != 0 && chessBoard[y - 1][x - 1] < 7) {
                         g.fillRect((x - 1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                        result[x - 1][y - 1] = true;
+                        check[x - 1][y - 1] = true;
                     }
                 }
                 if (x + 1 < 8) {
                     if (chessBoard[y - 1][x + 1] != 0 && chessBoard[y - 1][x + 1] < 7) {
                         g.fillRect((x + 1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                        result[x + 1][y - 1] = true;
+                        check[x + 1][y - 1] = true;
                     }
                 }
-
                 break;
 
             case 1:
                 // NEXT_STEP
                 if (chessBoard[y + 1][x] == 0) {
                     g.fillRect(x * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                    result[x][y + 1] = true;
+                    check[x][y + 1] = true;
                     if (y == 1 && chessBoard[y + 2][x] == 0) {
                         g.fillRect(x * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
-                        result[x][y + 2] = true;
+                        check[x][y + 2] = true;
                     }
                 }
                 // NEXT_KILL
@@ -178,13 +179,13 @@ public class ChessPanel extends JPanel implements ActionListener {
                 if (x - 1 >= 0) {
                     if (chessBoard[y + 1][x - 1] != 0 && chessBoard[y + 1][x - 1] > 7) {
                         g.fillRect((x - 1) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                        result[x - 1][y + 1] = true;
+                        check[x - 1][y + 1] = true;
                     }
                 }
                 if (x + 1 < 8) {
                     if (chessBoard[y + 1][x + 1] != 0 && chessBoard[y + 1][x + 1] > 7) {
                         g.fillRect((x + 1) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                        result[x + 1][y + 1] = true;
+                        check[x + 1][y + 1] = true;
                     }
                 }
                 break;
@@ -195,14 +196,14 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = x - 1; i >= 0; i--) {
                     if (chessBoard[y][i] == 0) {
                         g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[i][y] = true;
+                        check[i][y] = true;
                     } else if (chessBoard[y][i] < 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[i][y] = true;
+                        check[i][y] = true;
                         break;
                     } else
-                        // result[i][y] = true;
+                        // check[i][y] = true;
                         break;
                 }
 
@@ -211,11 +212,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = x + 1; i < 8; i++) {
                     if (chessBoard[y][i] == 0) {
                         g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[i][y] = true;
+                        check[i][y] = true;
                     } else if (chessBoard[y][i] < 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[i][y] = true;
+                        check[i][y] = true;
                         break;
                     } else
                         break;
@@ -226,11 +227,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = y - 1; i >= 0; i--) {
                     if (chessBoard[i][x] == 0) {
                         g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
-                        result[x][i] = true;
+                        check[x][i] = true;
                     } else if (chessBoard[i][x] < 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
-                        result[x][i] = true;
+                        check[x][i] = true;
                         break;
                     } else
                         break;
@@ -241,11 +242,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = y + 1; i < 8; i++) {
                     if (chessBoard[i][x] == 0) {
                         g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
-                        result[x][i] = true;
+                        check[x][i] = true;
                     } else if (chessBoard[i][x] < 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
-                        result[x][i] = true;
+                        check[x][i] = true;
                         break;
                     } else
                         break;
@@ -257,11 +258,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = x - 1; i >= 0; i--) {
                     if (chessBoard[y][i] == 0) {
                         g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[i][y] = true;
+                        check[i][y] = true;
                     } else if (chessBoard[y][i] > 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[i][y] = true;
+                        check[i][y] = true;
                         break;
                     } else
                         break;
@@ -272,11 +273,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = x + 1; i < 8; i++) {
                     if (chessBoard[y][i] == 0) {
                         g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[i][y] = true;
+                        check[i][y] = true;
                     } else if (chessBoard[y][i] > 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[i][y] = true;
+                        check[i][y] = true;
                         break;
                     } else
                         break;
@@ -287,11 +288,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = y - 1; i >= 0; i--) {
                     if (chessBoard[i][x] == 0) {
                         g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
-                        result[x][i] = true;
+                        check[x][i] = true;
                     } else if (chessBoard[i][x] > 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
-                        result[x][i] = true;
+                        check[x][i] = true;
                         break;
                     } else
                         break;
@@ -302,11 +303,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = y + 1; i < 8; i++) {
                     if (chessBoard[i][x] == 0) {
                         g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
-                        result[x][i] = true;
+                        check[x][i] = true;
                     } else if (chessBoard[i][x] > 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
-                        result[x][i] = true;
+                        check[x][i] = true;
                         break;
                     } else
                         break;
@@ -326,13 +327,13 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if (y - 2 >= 0) {
                         if (chessBoard[y - 2][x - 1] == 0) {
                             g.fillRect((x - 1) * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
-                            result[x - 1][y - 2] = true;
+                            check[x - 1][y - 2] = true;
                         }
                     }
                     if (y + 2 < 8) {
                         if (chessBoard[y + 2][x - 1] == 0) {
                             g.fillRect((x - 1) * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
-                            result[x - 1][y + 2] = true;
+                            check[x - 1][y + 2] = true;
                         }
                     }
                 }
@@ -341,13 +342,13 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if (y - 2 >= 0)
                         if (chessBoard[y - 2][x + 1] == 0) {
                             g.fillRect((x + 1) * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
-                            result[x + 1][y - 2] = true;
+                            check[x + 1][y - 2] = true;
                         }
 
                     if (y + 2 < 8)
                         if (chessBoard[y + 2][x + 1] == 0) {
                             g.fillRect((x + 1) * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
-                            result[x + 1][y + 2] = true;
+                            check[x + 1][y + 2] = true;
                         }
                 }
 
@@ -357,12 +358,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if ((y - 1) >= 0)
                         if (chessBoard[y - 1][x - 2] == 0) {
                             g.fillRect((x - 2) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                            result[x - 2][y - 1] = true;
+                            check[x - 2][y - 1] = true;
                         }
                     if ((y + 1) < 8)
                         if (chessBoard[y + 1][x - 2] == 0) {
                             g.fillRect((x - 2) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                            result[x - 2][y + 1] = true;
+                            check[x - 2][y + 1] = true;
                         }
                 }
                 // Move to top & bottom ( right )
@@ -370,12 +371,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if ((y - 1) >= 0)
                         if (chessBoard[y - 1][x + 2] == 0) {
                             g.fillRect((x + 2) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                            result[x + 2][y - 1] = true;
+                            check[x + 2][y - 1] = true;
                         }
                     if ((y + 1) < 8)
                         if (chessBoard[y + 1][x + 2] == 0) {
                             g.fillRect((x + 2) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                            result[x + 2][y + 1] = true;
+                            check[x + 2][y + 1] = true;
                         }
                 }
 
@@ -387,12 +388,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if (y - 2 >= 0)
                         if (chessBoard[y - 2][x - 1] != 0 && chessBoard[y - 2][x - 1] < 7) {
                             g.fillRect((x - 1) * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
-                            result[x - 1][y - 2] = true;
+                            check[x - 1][y - 2] = true;
                         }
                     if ((y + 2) < 8)
                         if (chessBoard[y + 2][x - 1] != 0 && chessBoard[y + 2][x - 1] < 7) {
                             g.fillRect((x - 1) * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
-                            result[x - 1][y + 2] = true;
+                            check[x - 1][y + 2] = true;
                         }
                 }
                 // Kill top & bottom ( right )
@@ -400,12 +401,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if ((y - 2) >= 0)
                         if (chessBoard[y - 2][x + 1] != 0 && chessBoard[y - 2][x + 1] < 7) {
                             g.fillRect((x + 1) * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
-                            result[x + 1][y - 2] = true;
+                            check[x + 1][y - 2] = true;
                         }
                     if ((y + 2) < 8)
                         if (chessBoard[y + 2][x + 1] != 0 && chessBoard[y + 2][x + 1] < 7) {
                             g.fillRect((x + 1) * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
-                            result[x + 1][y + 2] = true;
+                            check[x + 1][y + 2] = true;
                         }
                 }
 
@@ -415,12 +416,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if ((y - 1) >= 0)
                         if (chessBoard[y - 1][x - 2] != 0 && chessBoard[y - 1][x - 2] < 7) {
                             g.fillRect((x - 2) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                            result[x - 2][y - 1] = true;
+                            check[x - 2][y - 1] = true;
                         }
                     if ((y + 1) < 8)
                         if (chessBoard[y + 1][x - 2] != 0 && chessBoard[y + 1][x - 2] < 7) {
                             g.fillRect((x - 2) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                            result[x - 2][y + 1] = true;
+                            check[x - 2][y + 1] = true;
                         }
                 }
                 // Kill top & bottom ( right )
@@ -428,12 +429,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if ((y - 1) >= 0)
                         if (chessBoard[y - 1][x + 2] != 0 && chessBoard[y - 1][x + 2] < 7) {
                             g.fillRect((x + 2) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                            result[x + 2][y - 1] = true;
+                            check[x + 2][y - 1] = true;
                         }
                     if ((y + 1) < 8)
                         if (chessBoard[y + 1][x + 2] != 0 && chessBoard[y + 1][x + 2] < 7) {
                             g.fillRect((x + 2) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                            result[x + 2][y + 1] = true;
+                            check[x + 2][y + 1] = true;
                         }
                 }
 
@@ -449,13 +450,13 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if (y - 2 >= 0) {
                         if (chessBoard[y - 2][x - 1] == 0) {
                             g.fillRect((x - 1) * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
-                            result[x - 1][y - 2] = true;
+                            check[x - 1][y - 2] = true;
                         }
                     }
                     if (y + 2 < 8) {
                         if (chessBoard[y + 2][x - 1] == 0) {
                             g.fillRect((x - 1) * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
-                            result[x - 1][y + 2] = true;
+                            check[x - 1][y + 2] = true;
                         }
                     }
                 }
@@ -464,13 +465,13 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if (y - 2 >= 0)
                         if (chessBoard[y - 2][x + 1] == 0) {
                             g.fillRect((x + 1) * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
-                            result[x + 1][y - 2] = true;
+                            check[x + 1][y - 2] = true;
                         }
 
                     if (y + 2 < 8)
                         if (chessBoard[y + 2][x + 1] == 0) {
                             g.fillRect((x + 1) * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
-                            result[x + 1][y + 2] = true;
+                            check[x + 1][y + 2] = true;
                         }
                 }
 
@@ -480,12 +481,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if ((y - 1) >= 0)
                         if (chessBoard[y - 1][x - 2] == 0) {
                             g.fillRect((x - 2) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                            result[x - 2][y - 1] = true;
+                            check[x - 2][y - 1] = true;
                         }
                     if ((y + 1) < 8)
                         if (chessBoard[y + 1][x - 2] == 0) {
                             g.fillRect((x - 2) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                            result[x - 2][y + 1] = true;
+                            check[x - 2][y + 1] = true;
                         }
                 }
                 // Move to top & bottom ( right )
@@ -493,12 +494,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if ((y - 1) >= 0)
                         if (chessBoard[y - 1][x + 2] == 0) {
                             g.fillRect((x + 2) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                            result[x + 2][y - 1] = true;
+                            check[x + 2][y - 1] = true;
                         }
                     if ((y + 1) < 8)
                         if (chessBoard[y + 1][x + 2] == 0) {
                             g.fillRect((x + 2) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                            result[x + 2][y + 1] = true;
+                            check[x + 2][y + 1] = true;
                         }
                 }
 
@@ -510,12 +511,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if (y - 2 >= 0)
                         if (chessBoard[y - 2][x - 1] != 0 && chessBoard[y - 2][x - 1] > 7) {
                             g.fillRect((x - 1) * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
-                            result[x - 1][y - 2] = true;
+                            check[x - 1][y - 2] = true;
                         }
                     if ((y + 2) < 8)
                         if (chessBoard[y + 2][x - 1] != 0 && chessBoard[y + 2][x - 1] > 7) {
                             g.fillRect((x - 1) * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
-                            result[x - 1][y + 2] = true;
+                            check[x - 1][y + 2] = true;
                         }
                 }
                 // Kill top & bottom ( right )
@@ -523,12 +524,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if ((y - 2) >= 0)
                         if (chessBoard[y - 2][x + 1] != 0 && chessBoard[y - 2][x + 1] > 7) {
                             g.fillRect((x + 1) * cellSide + border, (y - 2) * cellSide + border, cellSide, cellSide);
-                            result[x + 1][y - 2] = true;
+                            check[x + 1][y - 2] = true;
                         }
                     if ((y + 2) < 8)
                         if (chessBoard[y + 2][x + 1] != 0 && chessBoard[y + 2][x + 1] > 7) {
                             g.fillRect((x + 1) * cellSide + border, (y + 2) * cellSide + border, cellSide, cellSide);
-                            result[x + 1][y + 2] = true;
+                            check[x + 1][y + 2] = true;
                         }
                 }
 
@@ -538,12 +539,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if ((y - 1) >= 0)
                         if (chessBoard[y - 1][x - 2] != 0 && chessBoard[y - 1][x - 2] > 7) {
                             g.fillRect((x - 2) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                            result[x - 2][y - 1] = true;
+                            check[x - 2][y - 1] = true;
                         }
                     if ((y + 1) < 8)
                         if (chessBoard[y + 1][x - 2] != 0 && chessBoard[y + 1][x - 2] > 7) {
                             g.fillRect((x - 2) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                            result[x - 2][y + 1] = true;
+                            check[x - 2][y + 1] = true;
                         }
                 }
                 // Kill top & bottom ( right )
@@ -551,12 +552,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if ((y - 1) >= 0)
                         if (chessBoard[y - 1][x + 2] != 0 && chessBoard[y - 1][x + 2] > 7) {
                             g.fillRect((x + 2) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                            result[x + 2][y - 1] = true;
+                            check[x + 2][y - 1] = true;
                         }
                     if ((y + 1) < 8)
                         if (chessBoard[y + 1][x + 2] != 0 && chessBoard[y + 1][x + 2] > 7) {
                             g.fillRect((x + 2) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                            result[x + 2][y + 1] = true;
+                            check[x + 2][y + 1] = true;
                         }
                 }
 
@@ -569,11 +570,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = 1; ((x - i) >= 0) && ((y - i) >= 0) && ((x - i) < 8) && ((y - i) < 8); i++) {
                     if (chessBoard[y - i][x - i] == 0) {
                         g.fillRect((x - i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
-                        result[x - i][y - i] = true;
+                        check[x - i][y - i] = true;
                     } else if (chessBoard[y - i][x - i] < 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect((x - i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
-                        result[x - i][y - i] = true;
+                        check[x - i][y - i] = true;
                         break;
                     } else
                         break;
@@ -584,11 +585,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = 1; ((x + i) >= 0) && ((y - i) >= 0) && ((x + i) < 8) && ((y - i) < 8); i++) {
                     if (chessBoard[y - i][x + i] == 0) {
                         g.fillRect((x + i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
-                        result[x + i][y - i] = true;
+                        check[x + i][y - i] = true;
                     } else if (chessBoard[y - i][x + i] < 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect((x + i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
-                        result[x + i][y - i] = true;
+                        check[x + i][y - i] = true;
                         break;
                     } else
                         break;
@@ -599,11 +600,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = 1; ((x + i) >= 0) && ((y + i) >= 0) && ((x + i) < 8) && ((y + i) < 8); i++) {
                     if (chessBoard[y + i][x + i] == 0) {
                         g.fillRect((x + i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
-                        result[x + i][y + i] = true;
+                        check[x + i][y + i] = true;
                     } else if (chessBoard[y + i][x + i] < 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect((x + i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
-                        result[x + i][y + i] = true;
+                        check[x + i][y + i] = true;
                         break;
                     } else
                         break;
@@ -614,11 +615,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = 1; ((x - i) >= 0) && ((y + i) >= 0) && ((x - i) < 8) && ((y + i) < 8); i++) {
                     if (chessBoard[y + i][x - i] == 0) {
                         g.fillRect((x - i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
-                        result[x - i][y + i] = true;
+                        check[x - i][y + i] = true;
                     } else if (chessBoard[y + i][x - i] < 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect((x - i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
-                        result[x - i][y + i] = true;
+                        check[x - i][y + i] = true;
                         break;
                     } else
                         break;
@@ -631,11 +632,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = 1; ((x - i) >= 0) && ((y - i) >= 0) && ((x - i) < 8) && ((y - i) < 8); i++) {
                     if (chessBoard[y - i][x - i] == 0) {
                         g.fillRect((x - i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
-                        result[x - i][y - i] = true;
+                        check[x - i][y - i] = true;
                     } else if (chessBoard[y - i][x - i] > 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect((x - i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
-                        result[x - i][y - i] = true;
+                        check[x - i][y - i] = true;
                         break;
                     } else
                         break;
@@ -646,11 +647,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = 1; ((x + i) >= 0) && ((y - i) >= 0) && ((x + i) < 8) && ((y - i) < 8); i++) {
                     if (chessBoard[y - i][x + i] == 0) {
                         g.fillRect((x + i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
-                        result[x + i][y - i] = true;
+                        check[x + i][y - i] = true;
                     } else if (chessBoard[y - i][x + i] > 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect((x + i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
-                        result[x + i][y - i] = true;
+                        check[x + i][y - i] = true;
                         break;
                     } else
                         break;
@@ -661,11 +662,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = 1; ((x + i) >= 0) && ((y + i) >= 0) && ((x + i) < 8) && ((y + i) < 8); i++) {
                     if (chessBoard[y + i][x + i] == 0) {
                         g.fillRect((x + i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
-                        result[x + i][y + i] = true;
+                        check[x + i][y + i] = true;
                     } else if (chessBoard[y + i][x + i] > 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect((x + i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
-                        result[x + i][y + i] = true;
+                        check[x + i][y + i] = true;
                         break;
                     } else
                         break;
@@ -676,11 +677,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = 1; ((x - i) >= 0) && ((y + i) >= 0) && ((x - i) < 8) && ((y + i) < 8); i++) {
                     if (chessBoard[y + i][x - i] == 0) {
                         g.fillRect((x - i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
-                        result[x - i][y + i] = true;
+                        check[x - i][y + i] = true;
                     } else if (chessBoard[y + i][x - i] > 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect((x - i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
-                        result[x - i][y + i] = true;
+                        check[x - i][y + i] = true;
                         break;
                     } else
                         break;
@@ -693,11 +694,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = x - 1; i >= 0; i--) {
                     if (chessBoard[y][i] == 0) {
                         g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[i][y] = true;
+                        check[i][y] = true;
                     } else if (chessBoard[y][i] < 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[i][y] = true;
+                        check[i][y] = true;
                         break;
                     } else
                         break;
@@ -708,12 +709,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = x + 1; i < 8; i++) {
                     if (chessBoard[y][i] == 0) {
                         g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[i][y] = true;
+                        check[i][y] = true;
 
                     } else if (chessBoard[y][i] < 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[i][y] = true;
+                        check[i][y] = true;
 
                         break;
                     } else
@@ -725,12 +726,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = y - 1; i >= 0; i--) {
                     if (chessBoard[i][x] == 0) {
                         g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
-                        result[x][i] = true;
+                        check[x][i] = true;
 
                     } else if (chessBoard[i][x] < 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
-                        result[x][i] = true;
+                        check[x][i] = true;
 
                         break;
                     } else
@@ -742,12 +743,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = y + 1; i < 8; i++) {
                     if (chessBoard[i][x] == 0) {
                         g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
-                        result[x][i] = true;
+                        check[x][i] = true;
 
                     } else if (chessBoard[i][x] < 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
-                        result[x][i] = true;
+                        check[x][i] = true;
 
                         break;
                     } else
@@ -759,12 +760,12 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = 1; ((x - i) >= 0) && ((y - i) >= 0) && ((x - i) < 8) && ((y - i) < 8); i++) {
                     if (chessBoard[y - i][x - i] == 0) {
                         g.fillRect((x - i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
-                        result[x - i][y - i] = true;
+                        check[x - i][y - i] = true;
 
                     } else if (chessBoard[y - i][x - i] < 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect((x - i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
-                        result[x - i][y - i] = true;
+                        check[x - i][y - i] = true;
                         break;
                     } else
                         break;
@@ -775,11 +776,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = 1; ((x + i) >= 0) && ((y - i) >= 0) && ((x + i) < 8) && ((y - i) < 8); i++) {
                     if (chessBoard[y - i][x + i] == 0) {
                         g.fillRect((x + i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
-                        result[x + i][y - i] = true;
+                        check[x + i][y - i] = true;
                     } else if (chessBoard[y - i][x + i] < 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect((x + i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
-                        result[x + i][y - i] = true;
+                        check[x + i][y - i] = true;
                         break;
                     } else
                         break;
@@ -790,11 +791,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = 1; ((x + i) >= 0) && ((y + i) >= 0) && ((x + i) < 8) && ((y + i) < 8); i++) {
                     if (chessBoard[y + i][x + i] == 0) {
                         g.fillRect((x + i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
-                        result[x + i][y + i] = true;
+                        check[x + i][y + i] = true;
                     } else if (chessBoard[y + i][x + i] < 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect((x + i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
-                        result[x + i][y + i] = true;
+                        check[x + i][y + i] = true;
                         break;
                     } else
                         break;
@@ -805,11 +806,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = 1; ((x - i) >= 0) && ((y + i) >= 0) && ((x - i) < 8) && ((y + i) < 8); i++) {
                     if (chessBoard[y + i][x - i] == 0) {
                         g.fillRect((x - i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
-                        result[x - i][y + i] = true;
+                        check[x - i][y + i] = true;
                     } else if (chessBoard[y + i][x - i] < 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect((x - i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
-                        result[x - i][y + i] = true;
+                        check[x - i][y + i] = true;
                         break;
                     } else
                         break;
@@ -823,11 +824,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = x - 1; i >= 0; i--) {
                     if (chessBoard[y][i] == 0) {
                         g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[i][y] = true;
+                        check[i][y] = true;
                     } else if (chessBoard[y][i] > 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[i][y] = true;
+                        check[i][y] = true;
                         break;
                     } else
                         break;
@@ -838,11 +839,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = x + 1; i < 8; i++) {
                     if (chessBoard[y][i] == 0) {
                         g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[i][y] = true;
+                        check[i][y] = true;
                     } else if (chessBoard[y][i] > 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect(i * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[i][y] = true;
+                        check[i][y] = true;
                         break;
                     } else
                         break;
@@ -853,11 +854,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = y - 1; i >= 0; i--) {
                     if (chessBoard[i][x] == 0) {
                         g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
-                        result[x][i] = true;
+                        check[x][i] = true;
                     } else if (chessBoard[i][x] > 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
-                        result[x][i] = true;
+                        check[x][i] = true;
                         break;
                     } else
                         break;
@@ -868,11 +869,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = y + 1; i < 8; i++) {
                     if (chessBoard[i][x] == 0) {
                         g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
-                        result[x][i] = true;
+                        check[x][i] = true;
                     } else if (chessBoard[i][x] > 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect(x * cellSide + border, i * cellSide + border, cellSide, cellSide);
-                        result[x][i] = true;
+                        check[x][i] = true;
                         break;
                     } else
                         break;
@@ -883,11 +884,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = 1; ((x - i) >= 0) && ((y - i) >= 0) && ((x - i) < 8) && ((y - i) < 8); i++) {
                     if (chessBoard[y - i][x - i] == 0) {
                         g.fillRect((x - i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
-                        result[x - i][y - i] = true;
+                        check[x - i][y - i] = true;
                     } else if (chessBoard[y - i][x - i] > 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect((x - i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
-                        result[x - i][y - i] = true;
+                        check[x - i][y - i] = true;
                         break;
                     } else
                         break;
@@ -898,11 +899,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = 1; ((x + i) >= 0) && ((y - i) >= 0) && ((x + i) < 8) && ((y - i) < 8); i++) {
                     if (chessBoard[y - i][x + i] == 0) {
                         g.fillRect((x + i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
-                        result[x + i][y - i] = true;
+                        check[x + i][y - i] = true;
                     } else if (chessBoard[y - i][x + i] > 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect((x + i) * cellSide + border, (y - i) * cellSide + border, cellSide, cellSide);
-                        result[x + i][y - i] = true;
+                        check[x + i][y - i] = true;
                         break;
                     } else
                         break;
@@ -913,11 +914,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = 1; ((x + i) >= 0) && ((y + i) >= 0) && ((x + i) < 8) && ((y + i) < 8); i++) {
                     if (chessBoard[y + i][x + i] == 0) {
                         g.fillRect((x + i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
-                        result[x + i][y + i] = true;
+                        check[x + i][y + i] = true;
                     } else if (chessBoard[y + i][x + i] > 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect((x + i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
-                        result[x + i][y + i] = true;
+                        check[x + i][y + i] = true;
                         break;
                     } else
                         break;
@@ -928,11 +929,11 @@ public class ChessPanel extends JPanel implements ActionListener {
                 for (int i = 1; ((x - i) >= 0) && ((y + i) >= 0) && ((x - i) < 8) && ((y + i) < 8); i++) {
                     if (chessBoard[y + i][x - i] == 0) {
                         g.fillRect((x - i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
-                        result[x - i][y + i] = true;
+                        check[x - i][y + i] = true;
                     } else if (chessBoard[y + i][x - i] > 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect((x - i) * cellSide + border, (y + i) * cellSide + border, cellSide, cellSide);
-                        result[x - i][y + i] = true;
+                        check[x - i][y + i] = true;
                         break;
                     } else
                         break;
@@ -945,25 +946,25 @@ public class ChessPanel extends JPanel implements ActionListener {
                 if (y - 1 >= 0) {
                     if (chessBoard[y - 1][x] == 0) {
                         g.fillRect(x * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                        result[x][y - 1] = true;
+                        check[x][y - 1] = true;
                     }
                 }
                 if (y + 1 < 8) {
                     if (chessBoard[y + 1][x] == 0) {
                         g.fillRect(x * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                        result[x][y + 1] = true;
+                        check[x][y + 1] = true;
                     }
                 }
                 if (x - 1 >= 0) {
                     if (chessBoard[y][x - 1] == 0) {
                         g.fillRect((x - 1) * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[x - 1][y] = true;
+                        check[x - 1][y] = true;
                     }
                 }
                 if (x + 1 < 8) {
                     if (chessBoard[y][x + 1] == 0) {
                         g.fillRect((x + 1) * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[x + 1][y] = true;
+                        check[x + 1][y] = true;
                     }
                 }
 
@@ -971,13 +972,13 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if (y - 1 >= 0) {
                         if (chessBoard[y - 1][x - 1] == 0) {
                             g.fillRect((x - 1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                            result[x - 1][y - 1] = true;
+                            check[x - 1][y - 1] = true;
                         }
                     }
                     if (y + 1 < 8) {
                         if (chessBoard[y + 1][x - 1] == 0) {
                             g.fillRect((x - 1) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                            result[x - 1][y + 1] = true;
+                            check[x - 1][y + 1] = true;
                         }
                     }
                 }
@@ -986,13 +987,13 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if (y - 1 >= 0) {
                         if (chessBoard[y - 1][x + 1] == 0) {
                             g.fillRect((x + 1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                            result[x + 1][y + 1] = true;
+                            check[x + 1][y - 1] = true;
                         }
                     }
                     if (y + 1 < 8) {
                         if (chessBoard[y + 1][x + 1] == 0) {
                             g.fillRect((x + 1) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                            result[x + 1][y + 1] = true;
+                            check[x + 1][y + 1] = true;
                         }
                     }
                 }
@@ -1003,28 +1004,28 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if (chessBoard[y - 1][x] != 0 && chessBoard[y - 1][x] < 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect(x * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                        result[x][y - 1] = true;
+                        check[x][y - 1] = true;
                     }
                 }
                 if (y + 1 < 8) {
                     if (chessBoard[y + 1][x] != 0 && chessBoard[y + 1][x] < 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect(x * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                        result[x][y + 1] = true;
+                        check[x][y + 1] = true;
                     }
                 }
                 if (x - 1 >= 0) {
                     if (chessBoard[y][x - 1] != 0 && chessBoard[y][x - 1] < 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect((x - 1) * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[x - 1][y] = true;
+                        check[x - 1][y] = true;
                     }
                 }
                 if (x + 1 < 8) {
                     if (chessBoard[y][x + 1] != 0 && chessBoard[y][x + 1] < 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect((x + 1) * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[x + 1][y] = true;
+                        check[x + 1][y] = true;
                     }
                 }
 
@@ -1033,14 +1034,14 @@ public class ChessPanel extends JPanel implements ActionListener {
                         if (chessBoard[y - 1][x - 1] != 0 && chessBoard[y - 1][x - 1] < 7) {
                             g.setColor(new Color(230, 0, 0, 180));
                             g.fillRect((x - 1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                            result[x - 1][y - 1] = true;
+                            check[x - 1][y - 1] = true;
                         }
                     }
                     if (y + 1 < 8) {
                         if (chessBoard[y + 1][x - 1] != 0 && chessBoard[y + 1][x - 1] < 7) {
                             g.setColor(new Color(230, 0, 0, 180));
                             g.fillRect((x - 1) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                            result[x - 1][y + 1] = true;
+                            check[x - 1][y + 1] = true;
                         }
                     }
                 }
@@ -1050,14 +1051,14 @@ public class ChessPanel extends JPanel implements ActionListener {
                         if (chessBoard[y - 1][x + 1] != 0 && chessBoard[y - 1][x + 1] < 7) {
                             g.setColor(new Color(230, 0, 0, 180));
                             g.fillRect((x + 1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                            result[x - 1][y - 1] = true;
+                            check[x + 1][y - 1] = true;
                         }
                     }
                     if (y + 1 < 8) {
                         if (chessBoard[y + 1][x + 1] != 0 && chessBoard[y + 1][x + 1] < 7) {
                             g.setColor(new Color(230, 0, 0, 180));
                             g.fillRect((x + 1) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                            result[x + 1][y + 1] = true;
+                            check[x + 1][y + 1] = true;
                         }
                     }
                 }
@@ -1069,25 +1070,25 @@ public class ChessPanel extends JPanel implements ActionListener {
                 if (y - 1 >= 0) {
                     if (chessBoard[y - 1][x] == 0) {
                         g.fillRect(x * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                        result[x][y - 1] = true;
+                        check[x][y - 1] = true;
                     }
                 }
                 if (y + 1 < 8) {
                     if (chessBoard[y + 1][x] == 0) {
                         g.fillRect(x * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                        result[x][y + 1] = true;
+                        check[x][y + 1] = true;
                     }
                 }
                 if (x - 1 >= 0) {
                     if (chessBoard[y][x - 1] == 0) {
                         g.fillRect((x - 1) * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[x - 1][y] = true;
+                        check[x - 1][y] = true;
                     }
                 }
                 if (x + 1 < 8) {
                     if (chessBoard[y][x + 1] == 0) {
                         g.fillRect((x + 1) * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[x + 1][y] = true;
+                        check[x + 1][y] = true;
                     }
                 }
 
@@ -1095,13 +1096,13 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if (y - 1 >= 0) {
                         if (chessBoard[y - 1][x - 1] == 0) {
                             g.fillRect((x - 1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                            result[x - 1][y - 1] = true;
+                            check[x - 1][y - 1] = true;
                         }
                     }
                     if (y + 1 < 8) {
                         if (chessBoard[y + 1][x - 1] == 0) {
                             g.fillRect((x - 1) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                            result[x - 1][y + 1] = true;
+                            check[x - 1][y + 1] = true;
                         }
                     }
                 }
@@ -1110,13 +1111,13 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if (y - 1 >= 0) {
                         if (chessBoard[y - 1][x + 1] == 0) {
                             g.fillRect((x + 1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                            result[x + 1][y + 1] = true;
+                            check[x + 1][y + 1] = true;
                         }
                     }
                     if (y + 1 < 8) {
                         if (chessBoard[y + 1][x + 1] == 0) {
                             g.fillRect((x + 1) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                            result[x + 1][y + 1] = true;
+                            check[x + 1][y + 1] = true;
                         }
                     }
                 }
@@ -1126,28 +1127,28 @@ public class ChessPanel extends JPanel implements ActionListener {
                     if (chessBoard[y - 1][x] != 0 && chessBoard[y - 1][x] > 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect(x * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                        result[x][y - 1] = true;
+                        check[x][y - 1] = true;
                     }
                 }
                 if (y + 1 < 8) {
                     if (chessBoard[y + 1][x] != 0 && chessBoard[y + 1][x] > 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect(x * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                        result[x][y + 1] = true;
+                        check[x][y + 1] = true;
                     }
                 }
                 if (x - 1 >= 0) {
                     if (chessBoard[y][x - 1] != 0 && chessBoard[y][x - 1] > 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect((x - 1) * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[x - 1][y] = true;
+                        check[x - 1][y] = true;
                     }
                 }
                 if (x + 1 < 8) {
                     if (chessBoard[y][x + 1] != 0 && chessBoard[y][x + 1] > 7) {
                         g.setColor(new Color(230, 0, 0, 180));
                         g.fillRect((x + 1) * cellSide + border, y * cellSide + border, cellSide, cellSide);
-                        result[x + 1][y] = true;
+                        check[x + 1][y] = true;
                     }
                 }
 
@@ -1156,14 +1157,14 @@ public class ChessPanel extends JPanel implements ActionListener {
                         if (chessBoard[y - 1][x - 1] != 0 && chessBoard[y - 1][x - 1] > 7) {
                             g.setColor(new Color(230, 0, 0, 180));
                             g.fillRect((x - 1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                            result[x - 1][y - 1] = true;
+                            check[x - 1][y - 1] = true;
                         }
                     }
                     if (y + 1 < 8) {
                         if (chessBoard[y + 1][x - 1] != 0 && chessBoard[y + 1][x - 1] > 7) {
                             g.setColor(new Color(230, 0, 0, 180));
                             g.fillRect((x - 1) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                            result[x - 1][y + 1] = true;
+                            check[x - 1][y + 1] = true;
                         }
                     }
                 }
@@ -1173,14 +1174,14 @@ public class ChessPanel extends JPanel implements ActionListener {
                         if (chessBoard[y - 1][x + 1] != 0 && chessBoard[y - 1][x + 1] > 7) {
                             g.setColor(new Color(230, 0, 0, 180));
                             g.fillRect((x + 1) * cellSide + border, (y - 1) * cellSide + border, cellSide, cellSide);
-                            result[x - 1][y - 1] = true;
+                            check[x + 1][y - 1] = true;
                         }
                     }
                     if (y + 1 < 8) {
                         if (chessBoard[y + 1][x + 1] != 0 && chessBoard[y + 1][x + 1] > 7) {
                             g.setColor(new Color(230, 0, 0, 180));
                             g.fillRect((x + 1) * cellSide + border, (y + 1) * cellSide + border, cellSide, cellSide);
-                            result[x + 1][y + 1] = true;
+                            check[x + 1][y + 1] = true;
                         }
                     }
                 }
@@ -1190,7 +1191,7 @@ public class ChessPanel extends JPanel implements ActionListener {
             default:
                 break;
         }
-        return result;
+        return check;
     }
 
     public BufferedImage getImageByPath(String path) {
@@ -1212,7 +1213,7 @@ public class ChessPanel extends JPanel implements ActionListener {
             if (xCurrent == (e.getX() - border) / cellSide && yCurrent == (e.getY() - border) / cellSide) {
                 xCurrent = -1;
                 yCurrent = -1;
-                // System.out.println("-> none");
+                System.out.println("-> none");
             } else if (xCurrent != -1 && yCurrent != -1 && chessBoard[yCurrent][xCurrent] != 0
                     && nextStep(xCurrent, yCurrent, (Graphics2D) getGraphics())[(e.getX() - border)
                             / cellSide][(e.getY() - border) / cellSide]) {
@@ -1221,28 +1222,24 @@ public class ChessPanel extends JPanel implements ActionListener {
                     && e.getY() < border + cellSide * 8) {
                 xCurrent = (e.getX() - border) / cellSide;
                 yCurrent = (e.getY() - border) / cellSide;
-                // System.out.println("-> "+((char)(xCurrent+65)) + "" + (yCurrent+1));
+                 System.out.println("-> "+((char)(xCurrent+65)) + "" + (yCurrent+1));
             }
         }
 
         @Override
         public void mousePressed(MouseEvent e) {
-
         }
 
         @Override
         public void mouseReleased(MouseEvent e) {
-
         }
 
         @Override
         public void mouseEntered(MouseEvent e) {
-
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
-
         }
     }
 }
